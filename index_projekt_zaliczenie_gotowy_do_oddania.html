@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator BMI</title>
+</head>
+<body >
+<div class= "kalkulator">Kalkulator BMI</div>
+<div class = "modul_wpisywania">
+<p>
+    Wpisz wagę w kg
+</p>
+<input type = "number" class = parametrWaga id="parametr_waga">
+<p>
+    Wpisz wzrost w cm
+</p>
+    <input type = "number" class = parametrWzrost id="parametr_wzrost"> 
+    <p></p>
+    <button class="wynik">zatwierdź</button>
+    <p> </p>
+</div>
+
+<div class = "modul_wyswietlania">
+    <p>
+    Wpisana waga:
+    </p>
+<input type = "text" id = "wpisana_waga"/>  
+<p>
+    Wpisany wzrost: 
+</p>
+<input type = "text" id = "wpisany_wzrost" /> 
+<p>
+    Wyliczone BMI: 
+</p>
+<input type = "number" id = "wyliczone_BMI" /> 
+<p>
+</p><input type = "text" id = "spadek_wzrost">
+<p></p>
+ </div>
+
+<div class = "modul_historii">
+    <p>
+    Historia pomiarów
+    </p>
+<table id ="lista_pomiarow" class ="listaPomiarow"> 
+    
+</table>
+
+<p>
+    Średnia pomiarów:
+</p><input id="srednia_pomiarow"> 
+    <p></p>
+<button class = "wyczysc_historie" > 
+    czyść </button>
+    <p></p>
+</div>
+
+
+<style>
+.kalkulator {
+    font-size: 40px;
+    display: flex;
+    margin: 10px;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+.modul_wpisywania, .modul_wyswietlania, .modul_historii {
+    font-size: 15px;
+    border: 1px solid rgb(66, 63, 63);
+    margin: 10px;
+    float: left;
+    padding: 8px;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    background-color: rgb(214, 235, 233);
+    width: 400px;
+}
+#parametr_waga, #parametr_wzrost, #wpisana_waga, #wpisany_wzrost, 
+#spadek_wzrost, #srednia_pomiarow {
+    font-size: 15px;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    background-color: rgb(157, 221, 233);
+}
+#wyliczone_BMI{
+    font-size: 20px;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    background-color: rgb(157, 221, 233);
+}
+.wynik, .wyczysc_historie {
+    font-size: 15px;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    background-color: rgba(167, 182, 223, 0.555);
+}
+.listaPomiarow {
+    font-size: 10px;
+}
+</style>
+
+<script>
+let i =0;
+let licznik = 0;
+let BMItemp = 0;
+let przycisk_oblicz = document.querySelector(".wynik");
+function wcisnietyPrzyciskOblicz () {
+let parametrWaga = document.querySelector(".parametrWaga");
+let parametrWzrost = document.querySelector(".parametrWzrost");
+let wartoscParametruWaga = parseFloat(parametrWaga.value);
+let wartoscParametruWzrost = parseFloat(parametrWzrost.value);
+let BMI = wartoscParametruWaga / (wartoscParametruWzrost * wartoscParametruWzrost) * 10000;
+if (wartoscParametruWaga >= 40 && wartoscParametruWaga <= 200) {
+    document.getElementById('wpisana_waga').value = parametrWaga.value;
+}
+else {
+    document.getElementById('wpisana_waga').value = "waga nie jest poprawna";
+}
+if (wartoscParametruWzrost >= 120 && wartoscParametruWzrost <= 240) {
+    document.getElementById('wpisany_wzrost').value = parametrWzrost.value;
+}
+else {
+    document.getElementById('wpisany_wzrost').value = "wzrost nie jest poprawny";
+}
+if (wartoscParametruWaga < 40 || wartoscParametruWaga > 200 || wartoscParametruWzrost < 120 || wartoscParametruWzrost > 240){
+    document.getElementById('wyliczone_BMI').value = "";
+} else {
+    document.getElementById('wyliczone_BMI').value = BMI;
+}
+
+addToHistory();
+document.getElementById('parametr_waga').value = "";
+document.getElementById('parametr_wzrost').value = "";
+}
+
+licznik ++;
+let tablica= [];
+function addToHistory () {
+    
+let data = new Date();
+let wpisanaWaga = document.getElementById("wpisana_waga");
+let wpisanyWzrost = document.getElementById("wpisany_wzrost");
+let wyliczoneBMI = document.getElementById("wyliczone_BMI");
+
+let pierwszyPomiar = {
+    data_pomiaru: data,
+    waga: wpisanaWaga.value,
+    wzrost: wpisanyWzrost.value,
+    bmi_pomiar: wyliczoneBMI.value,
+};
+let kontenerElement = document.querySelector(".listaPomiarow");
+licznik = licznik +1;
+let nowyLicznik = licznik;
+
+let tablica_pomiarow = Object.values(pierwszyPomiar);
+
+if (document.getElementById("wyliczone_BMI").value !== ""){
+tablica.push (pierwszyPomiar)}
+
+if (document.getElementById("wyliczone_BMI").value !== "")
+{
+let pomiar = document.createElement("button");
+
+pomiar.innerHTML = "Pomiar z " + pierwszyPomiar.data_pomiaru + "; waga: " + pierwszyPomiar.waga
++ "; wzrost: " + pierwszyPomiar.wzrost + "; BMI: " + pierwszyPomiar.bmi_pomiar + licznik;
+
+let suma = 0;
+let srednia = 0;
+for (let i=0; i<tablica.length; i++) {
+    let object = tablica[i];
+    let object_1 = parseFloat (object.bmi_pomiar + licznik);
+    suma = object_1 + suma;
+    srednia = suma / tablica.length
+document.getElementById("srednia_pomiarow").value = srednia;
+}
+
+kontenerElement.appendChild(pomiar);
+pomiar.addEventListener("click", function () {
+document.getElementById('wpisana_waga').value = tablica_pomiarow[1];
+document.getElementById('wpisany_wzrost').value = tablica_pomiarow[2];
+document.getElementById('wyliczone_BMI').value = tablica_pomiarow[3];
+document.getElementById('spadek_wzrost').value = "";
+});
+let BMI = document.getElementById("wyliczone_BMI").value;
+if (BMItemp !== 0 && BMI !== 0 && BMI !== "" && BMItemp !== "")
+{
+if (BMI == BMItemp){
+    document.getElementById("spadek_wzrost").value = "Twoje BMI nie zmieniło się!";
+}
+if (BMI > BMItemp) {
+    document.getElementById("spadek_wzrost").value = "Twoje BMI wzrosło!";
+} 
+if (BMI < BMItemp){
+    document.getElementById("spadek_wzrost").value = "Twoje BMI spadło!";
+}}
+BMItemp = BMI;
+
+let przycisk_wyczysc_historie = document.querySelector(".wyczysc_historie");
+function wcisnietyPrzyciskWyczyscHistorie (){
+pomiar.innerHTML = "";
+document.getElementById("srednia_pomiarow").value = "";
+}
+przycisk_wyczysc_historie.addEventListener("click", wcisnietyPrzyciskWyczyscHistorie);
+}
+}
+
+przycisk_oblicz.addEventListener("click", wcisnietyPrzyciskOblicz);
+
+
+</script>
+</body>
+</html>
